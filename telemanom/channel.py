@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import logging
+from preprocessor import Preprocessor
 
 logger = logging.getLogger('telemanom')
 
@@ -66,6 +67,18 @@ class Channel:
             self.X_test = data[:, :-self.config.n_predictions, :]
             self.y_test = data[:, -self.config.n_predictions:, 0]  # telemetry value is at position 0
 
+    def scale(self):
+        """Min/Max or Standard Scale
+        Remove outliers, etc.
+        """
+        if self.config.scaler == 'min_max':
+            self.scaler = MinMaxScaler()
+        else:
+            self.scaler = StandardScaler()
+
+        self.train = self.scaler.fit_transform(self.train)
+        self.test = self.scaler.transform(self.test)
+
     def load_data(self):
         """
         Load train and test data from local.
@@ -78,5 +91,9 @@ class Channel:
             logger.critical(e)
             logger.critical("Source data not found, may need to add data to repo: <link>")
 
+        if self.config.preprocess:
+            self.train, self.test = Preprocessor(self.config, self.id, self.train, self.test)
+
         self.shape_data(self.train)
         self.shape_data(self.test, train=False)
+

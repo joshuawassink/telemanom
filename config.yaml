@@ -21,6 +21,12 @@ smoothing_perc: 0.05
 # number of values surrounding an error that are brought into the sequence (promotes grouping on nearby sequences
 error_buffer: 100
 
+# Preprocessor parameters
+# ==================================
+scale: False # Standardize data
+scaler: 'min_max' # 'min_max' or 'stdize'
+
+
 # LSTM parameters
 # ==================================
 loss_metric: 'mse'
@@ -36,7 +42,7 @@ epochs: 35
 # Size of input layer not listed - dependent on evr modules and types included (see 'evr_modules' and 'erv_types' above)
 layers: [80,80]
 
-# Number of consequetive training iterations to allow without decreasing the val_loss by at least min_delta 
+# Number of consecutive training iterations to allow without decreasing the val_loss by at least min_delta
 patience: 10
 min_delta: 0.0003
 
